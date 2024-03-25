@@ -26,13 +26,20 @@ class ProcessAssistanceVC: UIViewController {
    override func viewWillAppear(_ animated: Bool) {
        self.assistances.removeAll()
        self.tableView.isHidden = true
-       FireStoreManager.shared.getAllAssistance(myDataOnly: myDataOnly) { assistances in
-           self.assistances.removeAll()
-           self.assistances = assistances
-           self.tableView.reloadData()
-           self.tableView.isHidden = (self.assistances.isEmpty)
-       }
+       self.getAllAssitance()
    }
+    
+    func getAllAssitance() {
+        FireStoreManager.shared.getAllAssistance(myDataOnly: myDataOnly) { assistances in
+            self.assistances.removeAll()
+            self.assistances = assistances
+            self.tableView.reloadData()
+            self.tableView.isHidden = (self.assistances.isEmpty)
+        }
+        
+    }
+   
+    
    
    @IBAction func onAdd(_ sender: Any) {
        
@@ -63,6 +70,18 @@ extension ProcessAssistanceVC: UITableViewDelegate, UITableViewDataSource {
        let cell = self.tableView.dequeueReusableCell(withIdentifier: "EventListCell") as! EventListCell
       
        cell.setData(title: assistances[indexPath.row].service , desc: assistances[indexPath.row].details)
+       
+       if(assistances[indexPath.row].createdByEmail.lowercased() == UserDefaultsManager.shared.getEmail().lowercased()) {
+           cell.deleteButton.isHidden = false
+       }else {
+           cell.deleteButton.isHidden = true
+       }
+       cell.deleteButton.onTap({
+           
+           FireStoreManager.shared.deleteAssistance(doucumentId: self.assistances[indexPath.row].documentId) { _ in
+               self.getAllAssitance()
+           }
+       })
        return cell
    }
     
