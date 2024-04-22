@@ -6,7 +6,8 @@ import UserNotifications
 func showInAppNotification(messageFrom:String,documentId:String,dataType:String,title:String,body:String) {
        
        let announce = Announcement(
-             //Title, the first line
+             //Title, the first
+        
              title           : title,
              //Subtitle, the second line
              subtitle        : body,
@@ -14,7 +15,8 @@ func showInAppNotification(messageFrom:String,documentId:String,dataType:String,
              image           : UIImage(named: "app_icon512"),
              //URL of remote image
              urlImage        : nil,
-             //Seconds before disappear
+             //Seconds before
+             
              duration        : 4,
              //Interaction type. none or text
              interactionType : InteractionType.none,
